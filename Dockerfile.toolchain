@@ -1,0 +1,5 @@
+FROM kevincharm/i686-elf-gcc-toolchain
+
+WORKDIR app/
+
+CMD /bin/bash

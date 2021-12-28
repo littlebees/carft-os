@@ -1,0 +1,4 @@
+/i686-elf-tools.sh
+/kernel.o
+/kernel_entry.o
+*.bin
