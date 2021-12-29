@@ -26,6 +26,7 @@ void reverse(char s[]) {
         s[j] = c;
     }
 }
+
 /**
  * K&R implementation
  */

@@ -1,17 +1,17 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h)
 # Nice syntax for file extension replacement
-OBJ = ${C_SOURCES:.c=.o}
+OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
 CFLAGS = -g -std=c99 -O2
 
 all: run
 
 # Notice how dependencies are built as needed
-kernel.bin: kernel_entry.o ${OBJ}
+kernel.bin: boot/kernel_entry.o ${OBJ}
 	docker run --rm -v ${PWD}:/app/ toolchain i686-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
-kernel.elf: kernel_entry.o ${OBJ}
+kernel.elf: boot/kernel_entry.o ${OBJ}
 	docker run --rm -v ${PWD}:/app/ toolchain i686-elf-ld -o $@ -Ttext 0x1000 $^ 
 
 # Rule to disassemble the kernel - may be useful to debug
@@ -37,12 +37,12 @@ toolchain:
 %.o: %.c ${HEADERS}
 	docker run --rm -v ${PWD}:/app/ toolchain i686-elf-gcc ${CFLAGS} -ffreestanding -c $< -o $@
 
-%.o: boot/%.asm
+%.o: %.asm
 	nasm $< -f elf -o $@
 
-%.bin: boot/%.asm
+%.bin: %.asm
 	nasm $< -f bin -o $@
 
 clean:
 	rm -rf *.bin *.dis *.o os-image.bin *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o
