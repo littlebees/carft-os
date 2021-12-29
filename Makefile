@@ -27,6 +27,10 @@ os-image.bin: boot.bin kernel.bin
 run: os-image.bin
 	qemu-system-i386 -fda $<
 
+run-debug: os-image.bin kernel.elf
+	qemu-system-i386 -S -s -fda os-image.bin &
+	gdb -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+
 toolchain:
 	docker build --tag toolchain -f Dockerfile .
 
