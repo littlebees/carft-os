@@ -9,7 +9,7 @@ load_kernel:
     call print_nl_16
 
     mov bx, KERNEL_OFFSET ; Read from disk and store in 0x1000
-    mov dh, 2
+    mov dh, 16 ; to load the kernel with drivers, we should load more sectors than 2
     mov dl, [BOOT_DRIVE]
     call disk_load
     ret
