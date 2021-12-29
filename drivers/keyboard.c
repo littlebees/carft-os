@@ -2,8 +2,7 @@
 #include "ports.h"
 #include "../cpu/isr.h"
 #include "screen.h"
-#include "../kernel/util.h"
-
+#include "../libc/string.h"
 
 void print_letter(uint8_t scancode) {
     switch (scancode) {
